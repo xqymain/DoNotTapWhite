@@ -2,7 +2,7 @@
 #include "resource.h"
 #include <time.h>
 
-#define BOLCK 100
+#define BLOCK 100
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //消息句柄 消息编号 附加参数 
 //窗口程序的入口函数
@@ -30,8 +30,8 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 		WS_SYSMENU|WS_CAPTION,
 		50,
 		50,
-		BOLCK*4+16,
-		BOLCK*4+34,
+		BLOCK*4+16,
+		BLOCK*4+34,
 		NULL,
 		NULL,
 		hInstance,
@@ -93,7 +93,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		for (int i = 0; i < 4; i++)
 		{
 			//指定矩形区域
-			SetRect(&rect, bw[i]*BOLCK,i*BOLCK,bw[i]*BOLCK+BOLCK,i*BOLCK+BOLCK);
+			SetRect(&rect, bw[i]*BLOCK,i*BLOCK,bw[i]*BLOCK+BLOCK,i*BLOCK+BLOCK);
 			//创建一支笔
 			hPen=CreatePen(PS_SOLID,1,RGB(0,255,255));
 			SelectObject(hDC, hPen);
@@ -112,7 +112,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		point.x = LOWORD(lParam);
 		point.y = HIWORD(lParam);
 
-		SendMessage(hWnd,WM_CHAR,point.x/BOLCK,0);
+		SendMessage(hWnd,WM_CHAR,point.x/BLOCK,0);
 		break;
 	case WM_CHAR:
 		hDC=GetDC(hWnd);
@@ -130,9 +130,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		bw[0] = rand() % 4;
 		n++;//点击黑块的次数
-		ScrollWindow(hWnd,0,BOLCK,NULL,NULL);
+		ScrollWindow(hWnd,0,BLOCK,NULL,NULL);
 		//指定矩形区域
-		SetRect(&rect, bw[0] * BOLCK,0,bw[0]*BOLCK+BOLCK,BOLCK);
+		SetRect(&rect, bw[0] * BLOCK,0,bw[0]*BLOCK+BLOCK,BLOCK);
 		//创建一支笔
 		hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 255));
 		SelectObject(hDC, hPen);
