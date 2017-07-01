@@ -1,7 +1,9 @@
+//引用必要的头文件
 #include <Windows.h>
 #include "resource.h"
 #include <time.h>
 
+//定义白块的大小
 #define BLOCK 100
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //消息句柄 消息编号 附加参数 
