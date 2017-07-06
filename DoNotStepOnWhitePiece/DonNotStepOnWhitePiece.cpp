@@ -1,50 +1,51 @@
 #include <Windows.h>
-#include "resource.h"
 #include <time.h>
 
-#define BOLCK 100
+#define BLOCK 100
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //ÏûÏ¢¾ä±ú ÏûÏ¢±àºÅ ¸½¼Ó²ÎÊı 
-//´°¿Ú³ÌĞòµÄÈë¿Úº¯Êı
-int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow)
+int val = 0;        //å‚¨å­˜æ—¶é—´æ•°æ®ï¼Œè®¡æ—¶
+int j = 1;          //è®¡æ•°
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //æ¶ˆæ¯å¥æŸ„ æ¶ˆæ¯ç¼–å· é™„åŠ å‚æ•° 
+																				 //çª—å£ç¨‹åºçš„å…¥å£å‡½æ•°
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	//Éè¼Æ´°¿ÚÀà
+	//è®¾è®¡çª—å£ç±»
 	WNDCLASS wndClass;
 	wndClass.cbClsExtra = 0;
 	wndClass.cbWndExtra = 0;
-	wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//½«±³¾°Ë¢³É°×É«
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);//¼ÓÔØ¹â±ê
-	wndClass.hIcon = LoadIcon(hInstance,MAKEINTRESOURCE(IDI_ICON1));
-	wndClass.hInstance = hInstance;//¼ÓÔØÓ¦ÓÃ³ÌĞòÊµÀı
-	wndClass.lpfnWndProc = WindowProc;//´°¿Ú»Øµ÷º¯Êı
-	wndClass.lpszClassName = L"DoNotStepOnWhitePisces";//´°¿ÚÀàĞÍÃû
-	wndClass.lpszMenuName = NULL;//²Ëµ¥Ãû³Æ
-	wndClass.style = CS_VREDRAW | CS_HREDRAW;//·ç¸ñ
+	wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//å°†èƒŒæ™¯åˆ·æˆç™½è‰²
+	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);//åŠ è½½å…‰æ ‡
+	wndClass.hIcon = NULL;
+	wndClass.hInstance = hInstance;//åŠ è½½åº”ç”¨ç¨‹åºå®ä¾‹
+	wndClass.lpfnWndProc = WindowProc;//çª—å£å›è°ƒå‡½æ•°
+	wndClass.lpszClassName = L"DoNotStepOnWhitePisces";//çª—å£ç±»å‹å
+	wndClass.lpszMenuName = NULL;//èœå•åç§°
+	wndClass.style = CS_VREDRAW | CS_HREDRAW;//é£æ ¼
 
-	//×¢²á´°¿Ú//
+											 //æ³¨å†Œçª—å£//
 	RegisterClass(&wndClass);
 
-	//´´½¨´°¿Ú
-	HWND hWnd=CreateWindow(L"DoNotStepOnWhitePisces",
-		L"±ğ²È°×¿é¶ù-¾­µäÄ£Ê½",
-		WS_SYSMENU|WS_CAPTION,
+	//åˆ›å»ºçª—å£
+	HWND hWnd = CreateWindow(L"DoNotStepOnWhitePisces",
+		L"åˆ«è¸©ç™½å—å„¿-60ç§’æ¨¡å¼",
+		WS_SYSMENU | WS_CAPTION,
 		50,
 		50,
-		BOLCK*4+16,
-		BOLCK*4+34,
+		BLOCK * 4 + 16,
+		BLOCK * 4 + 34,
 		NULL,
 		NULL,
 		hInstance,
 		0
-		);
-	//ÏÔÊ¾´°¿Ú
-	ShowWindow(hWnd,SW_SHOW);
-	//¸üĞÂ
+	);
+	//æ˜¾ç¤ºçª—å£
+	ShowWindow(hWnd, SW_SHOW);
+	//æ›´æ–°
 	UpdateWindow(hWnd);
 
-	//ÏûÏ¢Ñ­»·
+	//æ¶ˆæ¯å¾ªç¯
 	MSG msg;
-	while (GetMessage(&msg,NULL,0,0))
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -55,18 +56,18 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static int bw[4];
-	static int t=0;
+	static int t = 0;
 
-	HDC hDC;        //»æÍ¼¾ä±ú
-	PAINTSTRUCT ps; //½á¹¹Ìå 
-	HPEN hPen;      //»­±Ê¾ä±ú
-	HBRUSH hBrush;  //»­Ë¢¾ä±ú
-	POINT point = {0,0};    //Êó±êµã»÷×ø±ê
-	RECT rect;      //·½¿é´óĞ¡
+	HDC hDC;        //ç»˜å›¾å¥æŸ„
+	PAINTSTRUCT ps; //ç»“æ„ä½“ 
+	HPEN hPen;      //ç”»ç¬”å¥æŸ„
+	HBRUSH hBrush;  //ç”»åˆ·å¥æŸ„
+	POINT point = { 0,0 };    //é¼ æ ‡ç‚¹å‡»åæ ‡
+	RECT rect;      //æ–¹å—å¤§å°
 	static int Flag;
-	static int n = 0;          //µã»÷·½¿éµÄ¸ñÊı
-	wchar_t szTemp[100];//×Ö·ûÊı×é
-	
+	static int n = 0;          //ç‚¹å‡»æ–¹å—çš„æ ¼æ•°
+	wchar_t szTemp[100];//å­—ç¬¦æ•°ç»„
+
 	switch (uMsg)
 	{
 	case WM_CLOSE:
@@ -82,46 +83,67 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			bw[i] = rand() % 4;
 		}
-		//¿ªÆô¼ÆÊ±Æ÷
-		SetTimer(hWnd,1,10,NULL);
+		//å¼€å¯è®¡æ—¶å™¨
+		SetTimer(hWnd, 1, 10, NULL);
+		SetTimer(hWnd, 2, 1000, NULL);
 		break;
 	case WM_TIMER:
-		t++;
+		switch (wParam)
+		{
+		case 1:
+			t++;
+			return 0;
+
+		case 2:
+			val++;
+			if (val > 60)
+			{
+				wsprintf(szTemp, L"æ¸¸æˆç»“æŸï¼æ ¼æ•°ï¼š%d  ä½œè€…ï¼šé‚¢åº†å®‡", n);
+				if(j)
+				{
+				  j = 0;
+				  MessageBox(hWnd, szTemp, L"æç¤º", MB_ICONWARNING);
+				  return 0;
+				  exit(0);
+				}
+			}
+			return 0;
+		}
 		break;
 	case WM_PAINT:
-		hDC=BeginPaint(hWnd,&ps);
+		hDC = BeginPaint(hWnd, &ps);
 		for (int i = 0; i < 4; i++)
 		{
-			//Ö¸¶¨¾ØĞÎÇøÓò
-			SetRect(&rect, bw[i]*BOLCK,i*BOLCK,bw[i]*BOLCK+BOLCK,i*BOLCK+BOLCK);
-			//´´½¨Ò»Ö§±Ê
-			hPen=CreatePen(PS_SOLID,1,RGB(0,255,255));
+			//æŒ‡å®šçŸ©å½¢åŒºåŸŸ
+			SetRect(&rect, bw[i] * BLOCK, i*BLOCK, bw[i] * BLOCK + BLOCK, i*BLOCK + BLOCK);
+			//åˆ›å»ºä¸€æ”¯ç¬”
+			hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 255));
 			SelectObject(hDC, hPen);
-			//´´½¨Ò»¸ö»­Ë¢
+			//åˆ›å»ºä¸€ä¸ªç”»åˆ·
 			hBrush = CreateSolidBrush(RGB(0, 0, 0));
-			SelectObject(hDC,hBrush);
-			//»­Ò»¸ö·½¿é
+			SelectObject(hDC, hBrush);
+			//ç”»ä¸€ä¸ªæ–¹å—
 			Rectangle(hDC, rect.left, rect.top, rect.right, rect.bottom);
-			//ÊÍ·Å×ÊÔ´
+			//é‡Šæ”¾èµ„æº
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
 		}
-		EndPaint(hWnd,&ps);//½áÊø»æÍ¼
+		EndPaint(hWnd, &ps);//ç»“æŸç»˜å›¾
 		break;
 	case WM_LBUTTONDOWN:
 		point.x = LOWORD(lParam);
 		point.y = HIWORD(lParam);
 
-		SendMessage(hWnd,WM_CHAR,point.x/BOLCK,0);
+		SendMessage(hWnd, WM_CHAR, point.x / BLOCK, 0);
 		break;
 	case WM_CHAR:
-		hDC=GetDC(hWnd);
-		if (wParam!=bw[3])
+		hDC = GetDC(hWnd);
+		if (wParam != bw[3])
 		{
 			Flag = -1;
-			KillTimer(hWnd,0);//¹Ø±Õ¶¨Ê±Æ÷
-			wsprintf(szTemp,L"ÓÎÏ·½áÊø£¬ÄãÊäÁË£¡ÓÃÊ±£º%d.%dÃë ¸ñÊı£º%d   ×÷Õß£ºĞÏÇìÓî",t/100,t-(t/100)*100,n);
-			MessageBox(NULL,szTemp,L"ÌáÊ¾",MB_ICONWARNING);
+			KillTimer(hWnd, 0);//å…³é—­å®šæ—¶å™¨
+			wsprintf(szTemp, L"æ¸¸æˆç»“æŸï¼Œä½ è¾“äº†ï¼ç”¨æ—¶ï¼š%d.%dç§’ æ ¼æ•°ï¼š%d   ä½œè€…ï¼šé‚¢åº†å®‡", t / 100, t - (t / 100) * 100, n);
+			MessageBox(NULL, szTemp, L"æç¤º", MB_ICONWARNING);
 			exit(0);
 		}
 		for (int i = 3; i >= 1; i--)
@@ -129,22 +151,22 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bw[i] = bw[i - 1];
 		}
 		bw[0] = rand() % 4;
-		n++;//µã»÷ºÚ¿éµÄ´ÎÊı
-		ScrollWindow(hWnd,0,BOLCK,NULL,NULL);
-		//Ö¸¶¨¾ØĞÎÇøÓò
-		SetRect(&rect, bw[0] * BOLCK,0,bw[0]*BOLCK+BOLCK,BOLCK);
-		//´´½¨Ò»Ö§±Ê
+		n++;//ç‚¹å‡»é»‘å—çš„æ¬¡æ•°
+		ScrollWindow(hWnd, 0, BLOCK, NULL, NULL);
+		//æŒ‡å®šçŸ©å½¢åŒºåŸŸ
+		SetRect(&rect, bw[0] * BLOCK, 0, bw[0] * BLOCK + BLOCK, BLOCK);
+		//åˆ›å»ºä¸€æ”¯ç¬”
 		hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 255));
 		SelectObject(hDC, hPen);
-		//´´½¨Ò»¸ö»­Ë¢
+		//åˆ›å»ºä¸€ä¸ªç”»åˆ·
 		hBrush = CreateSolidBrush(RGB(0, 0, 0));
 		SelectObject(hDC, hBrush);
-		//»­Ò»¸ö·½¿é
+		//ç”»ä¸€ä¸ªæ–¹å—
 		Rectangle(hDC, rect.left, rect.top, rect.right, rect.bottom);
-		//ÊÍ·Å×ÊÔ´
+		//é‡Šæ”¾èµ„æº
 		DeleteObject(hPen);
 		DeleteObject(hBrush);
-		ReleaseDC(hWnd,hDC);
+		ReleaseDC(hWnd, hDC);
 		break;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
