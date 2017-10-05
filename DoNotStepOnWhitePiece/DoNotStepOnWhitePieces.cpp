@@ -1,16 +1,20 @@
-//引用必要的头文件
+// *Build Pass by VS 2013,2015
+// *Author: xqymain
+// *Thanks for your support
+
+// Reference the necessary header files
 #include <Windows.h>
 #include "resource.h"
 #include <time.h>
 
-//定义白块的大小
+// Define the size of the white block
 #define BLOCK 100
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam); //消息句柄 消息编号 附加参数 
-//窗口程序的入口函数
+// Define Entry function
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow)
 {
-	//设计窗口类
+	// Design the window class
 	WNDCLASS wndClass;
 	wndClass.cbClsExtra = 0;
 	wndClass.cbWndExtra = 0;
@@ -23,10 +27,10 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	wndClass.lpszMenuName = NULL;//菜单名称
 	wndClass.style = CS_VREDRAW | CS_HREDRAW;//风格
 
-	//注册窗口//
+	// 注册窗口类
 	RegisterClass(&wndClass);
 
-	//创建窗口
+	// 创建窗口
 	HWND hWnd=CreateWindow(L"DoNotStepOnWhitePisces",
 		L"别踩白块儿-经典模式",
 		WS_SYSMENU|WS_CAPTION,
@@ -39,12 +43,12 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 		hInstance,
 		0
 		);
-	//显示窗口
+	// 显示窗口
 	ShowWindow(hWnd,SW_SHOW);
-	//更新
+	// 更新
 	UpdateWindow(hWnd);
 
-	//消息循环
+	// 消息循环
 	MSG msg;
 	while (GetMessage(&msg,NULL,0,0))
 	{
@@ -59,15 +63,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static int bw[4];
 	static int t=0;
 
-	HDC hDC;        //绘图句柄
-	PAINTSTRUCT ps; //结构体 
-	HPEN hPen;      //画笔句柄
-	HBRUSH hBrush;  //画刷句柄
-	POINT point = {0,0};    //鼠标点击坐标
-	RECT rect;      //方块大小
+	HDC hDC;            // 绘图句柄
+	PAINTSTRUCT ps;     // 结构体 
+	HPEN hPen;          // 画笔句柄
+	HBRUSH hBrush;      // 画刷句柄
+	POINT point = {0,0};    // 鼠标点击坐标
+	RECT rect;          // 方块大小
 	static int Flag;
-	static int n = 0;          //点击方块的格数
-	wchar_t szTemp[100];//字符数组
+	static int n = 0;      // 点击方块的格数
+	wchar_t szTemp[100];   // 字符数组
 	
 	switch (uMsg)
 	{
@@ -84,7 +88,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			bw[i] = rand() % 4;
 		}
-		//开启计时器
+		// 开启计时器
 		SetTimer(hWnd,1,10,NULL);
 		break;
 	case WM_TIMER:
@@ -94,21 +98,21 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		hDC=BeginPaint(hWnd,&ps);
 		for (int i = 0; i < 4; i++)
 		{
-			//指定矩形区域
+			// 指定矩形区域
 			SetRect(&rect, bw[i]*BLOCK,i*BLOCK,bw[i]*BLOCK+BLOCK,i*BLOCK+BLOCK);
-			//创建一支笔
+			// 创建一支笔
 			hPen=CreatePen(PS_SOLID,1,RGB(0,255,255));
 			SelectObject(hDC, hPen);
-			//创建一个画刷
+			// 创建一个画刷
 			hBrush = CreateSolidBrush(RGB(0, 0, 0));
 			SelectObject(hDC,hBrush);
-			//画一个方块
+			// 画一个方块
 			Rectangle(hDC, rect.left, rect.top, rect.right, rect.bottom);
-			//释放资源
+			// 释放资源
 			DeleteObject(hPen);
 			DeleteObject(hBrush);
 		}
-		EndPaint(hWnd,&ps);//结束绘图
+		EndPaint(hWnd,&ps);   // 结束绘图
 		break;
 	case WM_LBUTTONDOWN:
 		point.x = LOWORD(lParam);
@@ -121,7 +125,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam!=bw[3])
 		{
 			Flag = -1;
-			KillTimer(hWnd,0);//关闭定时器
+			KillTimer(hWnd,0); // 关闭定时器
 			wsprintf(szTemp,L"游戏结束，你输了！用时：%d.%d秒 格数：%d   作者：邢庆宇",t/100,t-(t/100)*100,n);
 			MessageBox(NULL,szTemp,L"提示",MB_ICONWARNING);
 			exit(0);
@@ -131,19 +135,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bw[i] = bw[i - 1];
 		}
 		bw[0] = rand() % 4;
-		n++;//点击黑块的次数
+		n++;    // 点击黑块的次数
 		ScrollWindow(hWnd,0,BLOCK,NULL,NULL);
-		//指定矩形区域
+		// 指定矩形区域
 		SetRect(&rect, bw[0] * BLOCK,0,bw[0]*BLOCK+BLOCK,BLOCK);
-		//创建一支笔
+		// 创建一支笔
 		hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 255));
 		SelectObject(hDC, hPen);
-		//创建一个画刷
+		// 创建一个画刷
 		hBrush = CreateSolidBrush(RGB(0, 0, 0));
 		SelectObject(hDC, hBrush);
-		//画一个方块
+		// 画一个方块
 		Rectangle(hDC, rect.left, rect.top, rect.right, rect.bottom);
-		//释放资源
+		// 释放资源
 		DeleteObject(hPen);
 		DeleteObject(hBrush);
 		ReleaseDC(hWnd,hDC);
